@@ -106,5 +106,5 @@ $('#restart').onclick=()=>{if(!confirm('Start over and clear your picks?'))retur
 addEventListener('keydown',e=>{if(e.key=='ArrowRight')answer('yes',1);else if(e.key=='ArrowLeft')answer('no',-1);else if(e.key=='ArrowUp')answer('love');else if(e.key=='ArrowDown')answer('maybe');else if((e.metaKey||e.ctrlKey)&&e.key=='z')$('#undo').click()});
 render();
 </script>
-<script data-goatcounter="https://weberman.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>window.goatcounter={path:function(p){p=p||"/";if(p.indexOf("/house-emoji-swipe/")===0)return p;return "/house-emoji-swipe/"+p.replace(/^\/+/,"")}};</script><script data-goatcounter="https://weberman.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body></html>
