@@ -59,8 +59,8 @@ h1{font-family:Khand,sans-serif;font-weight:700;font-size:30px;line-height:1;mar
 .mw-hover:hover,.mw-hover:focus-visible{transform:translateY(-1px) scale(1.03);box-shadow:0 6px 18px rgba(10,10,10,.12)}
 .mw-hover:active{transform:scale(.98)}
 @media (prefers-reduced-motion:reduce){.mw-hover,.mw-hover:hover{transition:none;transform:none}}
-#mwShare{position:fixed;right:12px;bottom:calc(12px + var(--mw-share-offset,0px) + env(safe-area-inset-bottom));z-index:50;min-height:44px;padding:0 16px;background:#fff;color:#171717;border:1px solid #171717;border-radius:0;font-family:Hind,system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:8px}
-#mwShareMsg{position:fixed;right:12px;bottom:calc(64px + var(--mw-share-offset,0px));z-index:51;background:#fff;border:1px solid #e5e5e5;color:#0a0a0a;padding:6px 10px;font:13px Hind,system-ui,sans-serif;display:none}
+#mwShare{position:static;margin:16px auto;min-height:44px;padding:0 16px;background:#fff;color:#171717;border:1px solid #171717;border-radius:0;font-family:Hind,system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:8px}
+#mwShareMsg{position:static;margin:0 auto 12px;width:max-content;max-width:90%;z-index:51;background:#fff;border:1px solid #e5e5e5;color:#0a0a0a;padding:6px 10px;font:13px Hind,system-ui,sans-serif;display:none}
 </style>
 <button id="mwShare" class="mw-hover" type="button" aria-label="Share this app"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 3v13"/><path d="M7 8l5-5 5 5"/></svg>Share</button><div id="mwShareMsg">Copied</div>
 <script>
@@ -106,4 +106,21 @@ $('#restart').onclick=()=>{if(!confirm('Start over and clear your picks?'))retur
 addEventListener('keydown',e=>{if(e.key=='ArrowRight')answer('yes',1);else if(e.key=='ArrowLeft')answer('no',-1);else if(e.key=='ArrowUp')answer('love');else if(e.key=='ArrowDown')answer('maybe');else if((e.metaKey||e.ctrlKey)&&e.key=='z')$('#undo').click()});
 render();
 </script>
+
+<!-- mw-submit -->
+<script src="submit.js"></script>
+<script src="submit-hook.js"></script>
+<script>
+MWHook({app:'house-emoji-swipe',deck:'2026-10-13',
+ isEnd:function(){var r=document.getElementById('res');return !!r&&getComputedStyle(r).display!=='none';},
+ mount:function(){return document.getElementById('res');},
+ results:function(){var s=JSON.parse(localStorage.getItem('house-emoji-swipe-v1')||'{}');return {answers:s.a||{},summary:summary()};},
+ notes:function(){return '';}});
+</script>
+<!-- /mw-submit -->
+<!-- mw-built-footer -->
+<style>.mw-built{display:block;clear:both;width:100%;box-sizing:border-box;margin:0;padding:14px 16px calc(14px + var(--mw-built-pad,0px) + env(safe-area-inset-bottom,0px));background:#fafaf8;text-align:center;font-family:Hind,system-ui,sans-serif;font-size:12px;line-height:1.4;color:#8a8a8a;position:relative;z-index:1}.mw-built a{color:#8a8a8a;text-decoration:none;transition:color .15s,opacity .15s}.mw-built a.mw-hover:hover,.mw-built a:focus-visible{color:#555;text-decoration:underline}</style>
+<footer class="mw-built"><a class="mw-hover" href="https://maxweberman.com" target="_blank" rel="noopener">Built by Max Weberman</a></footer>
+<script>(function(){var r=document.documentElement;function m(){var ft=document.querySelector('.mw-built'),h=0,vh=innerHeight;if(!ft)return;document.querySelectorAll('body *').forEach(function(e){if(ft.contains(e))return;var s=getComputedStyle(e);if((s.position=='fixed'||s.position=='sticky')&&s.display!='none'&&s.visibility!='hidden'){var b=e.getBoundingClientRect();if(b.height>0&&b.height<vh*.5&&b.bottom>=vh-2&&b.top>vh*.5)h=Math.max(h,vh-b.top)}});r.style.setProperty('--mw-built-pad',Math.ceil(h)+'px')}addEventListener('load',m);addEventListener('resize',m);setTimeout(m,600);setTimeout(m,2000)})();</script>
+<!-- /mw-built-footer -->
 </body></html>
