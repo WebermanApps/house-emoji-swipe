@@ -117,6 +117,18 @@ MWHook({app:'house-emoji-swipe',deck:'2026-10-13',
  results:function(){var s=JSON.parse(localStorage.getItem('house-emoji-swipe-v1')||'{}');return {answers:s.a||{},summary:summary()};},
  notes:function(){return '';}});
 </script>
+<script src="mid-submit.js?v=mid2"></script>
+<script>
+(function(){var ALL=C.slice();
+MWMid({app:'house-emoji-swipe',deck:'2026-10-13',
+ answered:function(){return C.filter(function(c){return S.a[c.id];}).map(function(c){return c.id;});},
+ open:function(){return C.filter(function(c){return !S.a[c.id];}).map(function(c){return c.id;});},
+ skipped:function(){return C.filter(function(c,i){return i<S.i&&!S.a[c.id];}).map(function(c){return c.id;});},
+ total:function(){return ALL.length;},
+ results:function(ids){var o={};ids.forEach(function(k){o[k]=S.a[k];});return {answers:o,summary:summary()};},
+ notes:function(){return '';},
+ hide:function(ids,fresh){for(var i=C.length-1;i>=0;i--)if(ids.indexOf(String(C[i].id))>=0)C.splice(i,1);if(fresh){S.i=0;S.hist=[];}if(S.i>C.length)S.i=C.length;save();render();}});})();
+</script>
 <!-- /mw-submit -->
 <!-- mw-built-footer -->
 <style>.mw-built{display:block;clear:both;width:100%;box-sizing:border-box;margin:0;padding:14px 16px calc(14px + var(--mw-built-pad,0px) + env(safe-area-inset-bottom,0px));background:#fafaf8;text-align:center;font-family:Hind,system-ui,sans-serif;font-size:12px;line-height:1.4;color:#8a8a8a;position:relative;z-index:1}.mw-built a{color:#8a8a8a;text-decoration:none;transition:color .15s,opacity .15s}.mw-built a.mw-hover:hover,.mw-built a:focus-visible{color:#555;text-decoration:underline}</style>
