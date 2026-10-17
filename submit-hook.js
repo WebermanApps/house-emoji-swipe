@@ -1,6 +1,19 @@
 /* Construction Submit hook: shows the shared MWSubmit button on an app's end screen.
    MWHook({app,deck,isEnd:()=>bool,mount:()=>el,before:()=>el|null,results:()=>obj,notes:()=>str,intro:str})
    No token here; MWSubmit posts to the shared receiver. ?mwtest=1 labels a submission TEST. */
+  /* R104: every Back returns to where the user came from (history -> same-origin referrer -> same-origin ?from= -> fixed href) */
+(function(){if(window.__mwBackR104)return;window.__mwBackR104=1;
+function so(u){try{var x=new URL(u,location.href);return x.origin===location.origin?x:null}catch(_){return null}}
+function here(x){return x.pathname===location.pathname&&x.search===location.search}
+document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[data-back]');
+if(!a||e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+var r=document.referrer?so(document.referrer):null;if(r&&here(r))r=null;
+var f=new URLSearchParams(location.search).get('from');f=f?so(f):null;if(f&&here(f))f=null;
+e.preventDefault();
+if(history.length>1&&r){var t=setTimeout(function(){location.href=r.href},700);addEventListener('pagehide',function(){clearTimeout(t)});history.back();return}
+if(r){location.href=r.href;return}
+if(f){location.href=f.href;return}
+location.href=a.href});})();
 (function(w){
   var CSS='.mws-sec{margin:24px 0;padding:18px 16px;border:1px solid #e5e5e5;background:#fff;color:#0a0a0a;box-sizing:border-box;max-width:100%}'+
   '.mws-sec h2{margin:0 0 6px;font-family:Khand,Hind,system-ui,sans-serif;font-weight:700;font-size:1.4rem;letter-spacing:.04em}'+
@@ -25,7 +38,7 @@
       var bf=c.before&&c.before();if(bf&&bf.parentNode===host)host.insertBefore(box,bf);else host.appendChild(box);
       box.addEventListener('click',function(e){if(e.target.closest('.mws-btn'))backup();},true);
       w.MWSubmit.button(box,{agent:'construction',app:c.app,deck:c.deck,getResults:payloadResults,getNotes:payloadNotes});
-      if(!box.querySelector('.mw-backdecks')){var a=document.createElement('a');a.className='mw-backdecks mw-hover';a.href='https://webermanapps.github.io/branding-djqmb410/decks/';a.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>Back to Deck Building</span>';box.appendChild(a);}
+      if(!box.querySelector('.mw-backdecks')){var a=document.createElement('a');a.className='mw-backdecks mw-hover';a.setAttribute('data-back','');a.href='https://webermanapps.github.io/branding-djqmb410/decks/';a.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>Back to Deck Building</span>';box.appendChild(a);}
       if(c.onMount)c.onMount();
     }
     function start(){new MutationObserver(tick).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});tick();}

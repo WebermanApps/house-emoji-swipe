@@ -5,6 +5,19 @@
    R64: a Skip is not an answer. Skipped cards are never hidden; they are sent in results.skipped (and unanswered) so the agent can reword them, then come back.
    Sends answers so far through MWSubmit.send (submit.js). Sent ids are remembered in localStorage
    ('mw-mid-sent-'+app) and handed to hide() so only unanswered questions remain. Deck state itself is kept. */
+  /* R104: every Back returns to where the user came from (history -> same-origin referrer -> same-origin ?from= -> fixed href) */
+(function(){if(window.__mwBackR104)return;window.__mwBackR104=1;
+function so(u){try{var x=new URL(u,location.href);return x.origin===location.origin?x:null}catch(_){return null}}
+function here(x){return x.pathname===location.pathname&&x.search===location.search}
+document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[data-back]');
+if(!a||e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+var r=document.referrer?so(document.referrer):null;if(r&&here(r))r=null;
+var f=new URLSearchParams(location.search).get('from');f=f?so(f):null;if(f&&here(f))f=null;
+e.preventDefault();
+if(history.length>1&&r){var t=setTimeout(function(){location.href=r.href},700);addEventListener('pagehide',function(){clearTimeout(t)});history.back();return}
+if(r){location.href=r.href;return}
+if(f){location.href=f.href;return}
+location.href=a.href});})();
 (function(w){
   var DECKS='https://webermanapps.github.io/branding-djqmb410/decks/';
   var CSS='.mwm-btn{position:fixed;z-index:9000;top:calc(8px + env(safe-area-inset-top,0px));right:calc(8px + env(safe-area-inset-right,0px));display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;background:#0B6E4F;color:#fff;border:2px solid #0B6E4F;border-radius:0;font:700 14px/1 Khand,Hind,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;touch-action:manipulation;box-shadow:0 4px 14px rgba(10,10,10,.14)}'+
@@ -27,7 +40,7 @@
   function strip(o){return JSON.parse(JSON.stringify(o==null?null:o,function(k,v){return (typeof v==='string'&&v.slice(0,5)==='data:')?'[image not sent]':v;}));}
   function confirmBox(n,ok,left){var bg=document.createElement('div');bg.className='mwm-bg';bg.setAttribute('role','dialog');bg.setAttribute('aria-modal','true');bg.setAttribute('aria-labelledby','mwm-t');
     bg.innerHTML='<div class="mwm-card">'+CHECK+'<h2 id="mwm-t">'+(ok?'Answers Sent':'Saved, Will Send')+'</h2><p>'+n+' answer'+(n===1?'':'s')+(ok?' sent to the Construction agent.':' saved on this device; it sends when you are back online.')+'</p><p>'+(left?left+' question'+(left===1?'':'s')+' still open. Answered ones are hidden now.':'Nothing left to answer.')+'</p>'+
-      '<div class="mwm-row">'+(left?'<button type="button" class="mwm-keep mw-hover">Keep Going</button>':'')+'<a class="mw-backdecks mw-hover" href="'+DECKS+'">'+BACK+'<span>Back to Deck Building</span></a></div></div>';
+      '<div class="mwm-row">'+(left?'<button type="button" class="mwm-keep mw-hover">Keep Going</button>':'')+'<a class="mw-backdecks mw-hover" data-back href="'+DECKS+'">'+BACK+'<span>Back to Deck Building</span></a></div></div>';
     document.body.appendChild(bg);var k=bg.querySelector('.mwm-keep');if(k){k.onclick=function(){bg.remove()};setTimeout(function(){k.focus()},30);}
     bg.addEventListener('keydown',function(e){if(e.key==='Escape')bg.remove()});}
   w.MWMid=function(c){
